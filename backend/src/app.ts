@@ -13,6 +13,7 @@ import { rateLimit } from 'express-rate-limit';
 
 // routes
 import router from './modules/surah/surah.routes';
+import { errorHandler } from './middleware/errorHandler';
 
 
 const app: Application = express();
@@ -52,21 +53,16 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  const statusCode = err.status || 500;
-  res.status(statusCode).json({
-    status: false,
-    error: 'Internal Server Error',
-    message: err.message || 'Something went wrong!'
-  });
-});
-
+// unknown routes
 app.use((req: Request, res: Response) => {
   res.status(404).json({ 
     status: false,
     error: 'Route not found' 
   });
 });
+
+// global error handler
+app.use(errorHandler);
+
 
 export default app;
