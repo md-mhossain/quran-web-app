@@ -10,7 +10,7 @@ export const loadQuran = async () => {
   // const data_url = CONFIG.DATA_URL || "";
   const data_url = CONFIG.DATA_URL || "";
 
-  const res = await fetch(data_url);
+  const res = await fetch(data_url, {method: "GET"});
   cache = (await res.json()) as Surah[];
 
   return cache;
