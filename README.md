@@ -86,7 +86,7 @@ npm run dev
 
 ### 4. Run backend (optional)
 
-node server.js
+npm run dev
 
 
 ---

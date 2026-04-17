@@ -1,6 +1,8 @@
 import { Surah } from "../types";
+import { CONFIG } from '../config/index';
 
-const data_url = process.env.data_url || "";
+
+const data_url = CONFIG.DATA_URL || "";
 
 let cache: Surah[] = [];
 

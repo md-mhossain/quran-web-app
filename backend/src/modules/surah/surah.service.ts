@@ -1,9 +1,8 @@
 
-import { ApiResponse, SearchResult, Surah } from "../../types";
+import { SearchResult, Surah } from "../../types";
 import { loadQuran } from "../../lib/quran.loader"; 
 
 // Implementation for getting all surah
-
 export const getAllSurah = async (): Promise<Surah[]> => {
   const quran = await loadQuran();
 

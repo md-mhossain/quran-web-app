@@ -1,8 +1,9 @@
 import app from "./app";
-
-const PORT = process.env.PORT || 3000;
+import { CONFIG } from './config';
 
 import { initQuran } from "./lib/quran.loader";
+
+const PORT = CONFIG.PORT || 8000;
 
 const startServer = async () => {
   await initQuran();
