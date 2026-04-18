@@ -1,32 +1,39 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
 import { Settings, defaultSettings } from "@/types";
 
-
+import { createContext, useContext, useEffect, useState } from "react";
 
 type SettingsContextType = {
   settings: Settings;
-  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  setSettings: (val: Settings) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
-export const SettingsProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<Settings>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("settings");
-      return saved ? JSON.parse(saved) : defaultSettings;
-    }
-    return defaultSettings;
+    if (typeof window === "undefined") return defaultSettings;
+
+    const stored = localStorage.getItem("quran-settings");
+    return stored ? JSON.parse(stored) : defaultSettings;
   });
 
+  // persist only (NO extra state)
   useEffect(() => {
-    localStorage.setItem("settings", JSON.stringify(settings));
+    localStorage.setItem("quran-settings", JSON.stringify(settings));
+  }, [settings]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Font sizes
+    root.style.setProperty("--arabic-size", `${settings.arabicSize}px`);
+
+    root.style.setProperty(
+      "--translation-size",
+      `${settings.translationSize}px`,
+    );
   }, [settings]);
 
   return (
@@ -34,14 +41,10 @@ export const SettingsProvider = ({
       {children}
     </SettingsContext.Provider>
   );
-};
+}
 
 export const useSettings = () => {
-  const context = useContext(SettingsContext);
-
-  if (!context) {
-    throw new Error("useSettings must be used inside SettingsProvider");
-  }
-
-  return context;
+  const ctx = useContext(SettingsContext);
+  if (!ctx) throw new Error("useSettings must be used inside Provider");
+  return ctx;
 };

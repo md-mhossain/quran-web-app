@@ -1,13 +1,13 @@
 export interface Settings {
-  arabicFont: "amiri" | "noto";
-  arabicFontSize: number;
-  translationFontSize: number;
-}
+  font: string;
+  arabicSize: number;
+  translationSize: number;
+};
 
 export const defaultSettings: Settings = {
-  arabicFont: "amiri",
-  arabicFontSize: 28,
-  translationFontSize: 16,
+  font: "amiri",
+  arabicSize: 28,
+  translationSize: 16,
 };
 
 
@@ -30,10 +30,12 @@ export interface Surah {
 export interface SearchResult {
   surahId: number;
   surahName: string;
+  surahTransliteration: string;
+  surahTranslation: string;
   ayahNumber: number;
   arabic: string;
   translation: string;
-}
+};
 
 export interface ApiResponse<T> {
   status: boolean;

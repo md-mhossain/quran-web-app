@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Amiri, Noto_Naskh_Arabic, Inter } from "next/font/google";
+import { Amiri, Inter } from "next/font/google";
+import { SettingsProvider } from "@/context/SettingsContext";
+import BodyWrapper from "@/components/layout/BodyWrapper";
 
 const amiri = Amiri({
   subsets: ["arabic"],
@@ -9,10 +11,6 @@ const amiri = Amiri({
   weight: ["400", "700"],
 });
 
-const notoArabic = Noto_Naskh_Arabic({
-  subsets: ["arabic"],
-  variable: "--font-noto-arabic",
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,10 +30,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${amiri.variable} ${notoArabic.variable} ${inter.variable}`}
+      className={`${amiri.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {/* Wrap entire app */}
+        <SettingsProvider>
+          <BodyWrapper>{children}</BodyWrapper>
+        </SettingsProvider>
+      </body>
     </html>
   );
 }

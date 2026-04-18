@@ -7,7 +7,7 @@ export const fetchSurahList = async (): Promise<ApiResponse<Surah[]>> => {
       `${process.env.NEXT_PUBLIC_API_URL}/surah`,
       {
         method: "GET",
-        cache: "no-store",
+        next: { revalidate: 86400 } // 1 day refresh
       }
     );
 
@@ -43,7 +43,7 @@ export const fetchSurahById = async (
       `${process.env.NEXT_PUBLIC_API_URL}/surah/${id}`,
       {
         method: "GET",
-        cache: "no-store",
+        next: { revalidate: 86400 } // 1 day
       }
     );
 
@@ -68,7 +68,8 @@ export const fetchSurahById = async (
 
 // search ayahs by text (in translation)
 export const searchAyahs = async (
-  query: string
+  query: string,
+  options?: { signal?: AbortSignal }
 ): Promise<ApiResponse<SearchResult[]>> => {
   try {
     const res = await fetch(
@@ -76,6 +77,7 @@ export const searchAyahs = async (
       {
         method: "GET",
         cache: "no-store",
+        signal: options?.signal,
       }
     );
 

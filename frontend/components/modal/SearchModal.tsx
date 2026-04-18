@@ -2,70 +2,112 @@
 
 import { searchAyahs } from "@/lib/api";
 import { SearchResult } from "@/types";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import AyahList from "@/components/ayah/AyahList";
+import Ayah from "../ayah/Ayah";
+import AyahSkeleton from "@/skeleton/AyahSkeleton";
 
 export default function SearchModal({ onClose }: { onClose: () => void }) {
-
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("Search query:", query);
+  const abortRef = useRef<AbortController | null>(null);
 
   const handleSearch = async (value: string) => {
     setQuery(value);
 
+    // clear results if empty
     if (!value.trim()) {
       setResults([]);
+      setLoading(false);
       return;
     }
+
+    // cancel previous request safely
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       setLoading(true);
 
-      const result = await searchAyahs(value);
+      const result = await searchAyahs(value, {
+        signal: controller.signal,
+      });
+
       setResults(result?.data || []);
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        // 👇 silently ignore abort error (IMPORTANT)
+        if (err.name === "AbortError") return;
+
+        console.error(err);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
+
+      {/* BACKDROP */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-md"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-xl mx-4 rounded-2xl border border-white/10 bg-white/80 backdrop-blur-xl shadow-2xl overflow-hidden animate-fadeIn">
+      {/* MODAL */}
+      <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
 
-        {/* input */}
-        <div className="p-4 flex items-center gap-2">
-          🔍
-          <input
-            autoFocus
-            value={query}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full bg-transparent outline-none"
-            placeholder="Search ayah by keyword, e.g. mercy, light, etc."
-          />
+        {/* HEADER */}
+        <div className="bg-gradient-to-r from-white to-gray-50 px-6 pt-6 pb-4 border-b border-gray-200">
+
+          <p className="text-xs text-gray-500 mb-3">
+            Search Quran • Surah & Ayah
+          </p>
+
+          {/* INPUT */}
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 transition">
+            🔍
+
+            <input
+              autoFocus
+              value={query}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full outline-none text-sm"
+              placeholder="Search: mercy, light, guidance..."
+            />
+          </div>
         </div>
 
-        {/* results */}
-        <div className="max-h-80 overflow-y-auto">
-          {loading && <p className="p-4 text-sm">Searching...</p>}
+        {/* RESULTS */}
+        <div className="bg-gray-50 max-h-[420px] overflow-y-auto">
 
-          {!loading && results.length === 0 && query && (
-            <p className="p-4 text-sm">No results found</p>
+          {loading && (
+            <div className="p-6 text-sm text-gray-500">
+              <AyahSkeleton />
+              <AyahSkeleton />
+              <AyahSkeleton />
+            </div>
           )}
 
-          {results.map((ayah) => (
-            <div key={ayah.surahId} className="p-3 hover:bg-gray-100">
-              {ayah.surahName}
+          {!loading && results.length === 0 && query && (
+            <div className="p-6 text-sm text-gray-400 text-center">
+              No results found for{" "}
+              <span className="font-medium text-gray-600">{query}</span>
             </div>
-          ))}
+          )}
+
+          {!loading && results.length > 0 && (
+            <div className="bg-white mx-3 my-3 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <AyahList results={results} onClose={onClose} />
+            </div>
+          )}
         </div>
       </div>
     </div>

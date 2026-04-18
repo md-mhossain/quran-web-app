@@ -1,7 +1,22 @@
-import { fetchSurahById } from "@/lib/api";
+import { fetchSurahById, fetchSurahList } from "@/lib/api";
 import SurahDetails from "@/components/surah/SurahDetails";
 import { Surah } from "@/types";
 import MasterLayout from "@/components/layout/MasterLayout";
+
+
+// Force SSG
+export const dynamic = "force-static";
+
+// Generate all static routes at build time
+export async function generateStaticParams() {
+  const res = await fetchSurahList();
+
+  if (!res.status || !res.data) return [];
+
+  return res.data.map((surah: Surah) => ({
+    id: String(surah.id),
+  }));
+}
 
 
 
@@ -18,7 +33,6 @@ export default async function Page({
     
     const { id } = await params;
 
-  console.log("Fetching Surah with ID:", id);
 
   const result = await fetchSurahById(id);
 
