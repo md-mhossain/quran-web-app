@@ -16,11 +16,3 @@ export const loadQuran = async () => {
   return cache;
 
 };
-
-// export const loadQuran = () => {
-//   if (!cache) {
-//     throw new Error("Quran not initialized. Call initQuran first.");
-//   }
-
-//   return cache;
-// };
