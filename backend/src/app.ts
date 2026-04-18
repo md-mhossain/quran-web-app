@@ -21,7 +21,7 @@ const app: Application = express();
 const corsOptions: CorsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET'],
-//   credentials: true
+  credentials: false
 };
 
 const limiter = rateLimit({

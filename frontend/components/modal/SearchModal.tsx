@@ -2,9 +2,8 @@
 
 import { searchAyahs } from "@/lib/api";
 import { SearchResult } from "@/types";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AyahList from "@/components/ayah/AyahList";
-import Ayah from "../ayah/Ayah";
 import AyahSkeleton from "@/skeleton/AyahSkeleton";
 
 export default function SearchModal({ onClose }: { onClose: () => void }) {
@@ -13,44 +12,57 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
 
   const abortRef = useRef<AbortController | null>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  
 
-  const handleSearch = async (value: string) => {
+  const handleSearch = (value: string) => {
     setQuery(value);
 
-    // clear results if empty
+    // clear debounce
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
     if (!value.trim()) {
       setResults([]);
       setLoading(false);
       return;
     }
 
-    // cancel previous request safely
-    if (abortRef.current) {
-      abortRef.current.abort();
-    }
-
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    try {
-      setLoading(true);
-
-      const result = await searchAyahs(value, {
-        signal: controller.signal,
-      });
-
-      setResults(result?.data || []);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        // 👇 silently ignore abort error (IMPORTANT)
-        if (err.name === "AbortError") return;
-
-        console.error(err);
+    debounceRef.current = setTimeout(async () => {
+      // cancel previous request
+      if (abortRef.current) {
+        abortRef.current.abort();
       }
-    } finally {
-      setLoading(false);
-    }
+
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        setLoading(true);
+
+        const result = await searchAyahs(query, {
+          signal: controller.signal,
+        });
+        console.log("Search results:", result);
+
+        setResults(result?.data || []);
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") return;
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 400); // debounce 400ms
   };
+
+  // cleanup on unmount
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
@@ -89,7 +101,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         <div className="bg-gray-50 max-h-[420px] overflow-y-auto">
 
           {loading && (
-            <div className="p-6 text-sm text-gray-500">
+            <div className="space-y-2 p-2">
               <AyahSkeleton />
               <AyahSkeleton />
               <AyahSkeleton />
@@ -108,6 +120,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
               <AyahList results={results} onClose={onClose} />
             </div>
           )}
+
         </div>
       </div>
     </div>

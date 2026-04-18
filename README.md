@@ -10,12 +10,12 @@ A modern and responsive Quran web application that allows users to read Surahs, 
 ---
 
 ## 🚀 Live Demo
-👉 [Live Site Link Here]
+👉 https://quran-web-app-als7.vercel.app
 
 ---
 
 ## 📂 GitHub Repository
-👉 [Repo Link Here]
+https://github.com/md-mhossain/quran-web-app
 
 ---
 
@@ -61,7 +61,6 @@ A modern and responsive Quran web application that allows users to read Surahs, 
 
 - frontend/        # Next.js (SSG) application  
 - backend/         # Node.js (Express API)  
-- data/            # Quran JSON dataset  
 - README.md  
 
 
@@ -71,7 +70,7 @@ A modern and responsive Quran web application that allows users to read Surahs, 
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/md-mhossain/quran-web-app.git
 
 
 ### 2. Install dependencies
@@ -92,7 +91,7 @@ npm run dev
 ---
 
 ## 🎥 Demo Video
-👉 [Add your screen recording link here]
+👉 https://www.loom.com/share/9e16665cb7f54ab1b2c68802fc14e9ed
 
 ---
 
