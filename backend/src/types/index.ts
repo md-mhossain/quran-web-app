@@ -24,6 +24,8 @@ export interface ApiResponse<T> {
 export interface SearchResult {
   surahId: number;
   surahName: string;
+  surahTransliteration: string;
+  surahTranslation: string;
   ayahNumber: number;
   arabic: string;
   translation: string;

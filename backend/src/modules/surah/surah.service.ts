@@ -51,6 +51,8 @@ export const searchAyahs = async (
         results.push({
           surahId: surah.id,
           surahName: surah.name,
+          surahTransliteration: surah.transliteration,
+          surahTranslation: surah.translation,
           ayahNumber: ayah.id,
           arabic: ayah.text,
           translation: ayah.translation,
