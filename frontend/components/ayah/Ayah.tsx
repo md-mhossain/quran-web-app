@@ -24,7 +24,7 @@ export default function Ayah({ ayah, onClose }: { ayah: SearchResult; onClose: (
         </div>
 
         {/* ayah badge */}
-        <span className="translation-text font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+        <span className="text-sm font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
           {ayah.ayahNumber}
         </span>
       </div>
