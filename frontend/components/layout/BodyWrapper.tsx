@@ -16,12 +16,6 @@ export default function BodyWrapper({
         min-h-full flex flex-col
         ${settings.font === "amiri" ? "font-amiri" : "font-inter"}
       `}
-      style={
-        {
-          "--arabic-size": `text-[${settings.arabicSize}px]`,
-          "--translation-size": `text-[${settings.translationSize}px]`,
-        } as React.CSSProperties
-      }
     >
       {children}
     </div>
