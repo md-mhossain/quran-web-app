@@ -9,11 +9,20 @@ export const getAllSurah = async (
   try {
     const data = await surahService.getAllSurah();
 
+    const formatted = data.map((s: any) => ({
+      id: s.id,
+      name: s.name,
+      translation: s.translation,
+      transliteration: s.transliteration,
+      total_verses: s.verses?.length,
+    }));
+
     res.status(200).json({
       status: true,
       message: "Surah list fetched successfully",
-      data,
+      data: formatted,
     });
+
   } catch (error: any) {
     res.status(400).json({
       status: false,
