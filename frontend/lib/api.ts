@@ -69,7 +69,6 @@ export const fetchSurahById = async (
 // search ayahs by text (in translation)
 export const searchAyahs = async (
   query: string,
-  options?: { signal?: AbortSignal }
 ): Promise<ApiResponse<SearchResult[]>> => {
   try {
     const res = await fetch(
@@ -77,9 +76,9 @@ export const searchAyahs = async (
       {
         method: "GET",
         cache: "no-store",
-        signal: options?.signal,
       }
     );
+    console.log("Search query:", query, "Response status:", res.status);
 
     if (!res.ok) {
       throw new Error("Failed to search ayahs");

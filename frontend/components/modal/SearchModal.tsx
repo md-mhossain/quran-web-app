@@ -11,62 +11,80 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const abortRef = useRef<AbortController | null>(null);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestIdRef = useRef(0);
+  const cacheRef = useRef<Map<string, SearchResult[]>>(new Map());
 
   const handleSearch = (value: string) => {
     setQuery(value);
 
-    // clear debounce
+    const trimmed = value.trim();
+
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    if (!value.trim()) {
+    // reset state for empty / short query
+    if (!trimmed || trimmed.length < 2) {
       setResults([]);
       setLoading(false);
       return;
     }
 
-    debounceRef.current = setTimeout(async () => {
-      // cancel previous request
-      if (abortRef.current) {
-        abortRef.current.abort();
-      }
+    // INSTANT CACHE (Google-style feel)
+    if (cacheRef.current.has(trimmed)) {
+      setResults(cacheRef.current.get(trimmed)!);
+      setLoading(false);
+      return;
+    }
 
-      const controller = new AbortController();
-      abortRef.current = controller;
+    debounceRef.current = setTimeout(async () => {
+      const currentRequestId = ++requestIdRef.current;
 
       try {
         setLoading(true);
 
-        const result = await searchAyahs(query, {
-          signal: controller.signal,
-        });
-        console.log("Search results:", result);
+        const result = await searchAyahs(trimmed);
 
-        setResults(result?.data || []);
+        // ignore old responses (race safety)
+        if (currentRequestId !== requestIdRef.current) return;
+
+        const data = result?.data || [];
+
+        // save to cache
+        cacheRef.current.set(trimmed, data);
+
+        setResults(data);
       } catch (err: unknown) {
-        if (err instanceof Error && err.name === "AbortError") return;
-        console.error(err);
+        console.error("Search error:", err);
       } finally {
-        setLoading(false);
+        if (currentRequestId === requestIdRef.current) {
+          setLoading(false);
+        }
       }
-    }, 400); // debounce 400ms
+    }, 200); // faster debounce = instant feel
   };
 
-  // cleanup on unmount
+  // ESC close support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  // cleanup
   useEffect(() => {
     return () => {
-      abortRef.current?.abort();
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
-
+      
       {/* BACKDROP */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-md"
@@ -100,6 +118,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
         {/* RESULTS */}
         <div className="bg-gray-50 max-h-[420px] overflow-y-auto">
 
+          {/* Loading skeleton */}
           {loading && (
             <div className="space-y-2 p-2">
               <AyahSkeleton />
@@ -108,13 +127,15 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
             </div>
           )}
 
-          {!loading && results.length === 0 && query && (
+          {/* Empty state */}
+          {!loading && results.length === 0 && query.trim().length >= 2 && (
             <div className="p-6 text-sm text-gray-400 text-center">
               No results found for{" "}
               <span className="font-medium text-gray-600">{query}</span>
             </div>
           )}
 
+          {/* Results */}
           {!loading && results.length > 0 && (
             <div className="bg-white mx-3 my-3 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <AyahList results={results} onClose={onClose} />
