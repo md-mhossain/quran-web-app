@@ -1,7 +1,6 @@
 "use client";
 
 import { Settings, defaultSettings } from "@/types";
-
 import { createContext, useContext, useEffect, useState } from "react";
 
 type SettingsContextType = {
@@ -12,28 +11,28 @@ type SettingsContextType = {
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
+  
+  // Lazy init (runs only on client, safe)
   const [settings, setSettings] = useState<Settings>(() => {
-    if (typeof window === "undefined") return defaultSettings;
-
-    const stored = localStorage.getItem("quran-settings");
-    return stored ? JSON.parse(stored) : defaultSettings;
+    try {
+      const stored = localStorage.getItem("quran-settings");
+      return stored ? JSON.parse(stored) : defaultSettings;
+    } catch {
+      return defaultSettings;
+    }
   });
 
-  // persist only (NO extra state)
+  // Persist
   useEffect(() => {
     localStorage.setItem("quran-settings", JSON.stringify(settings));
   }, [settings]);
 
+  // Apply CSS variables
   useEffect(() => {
     const root = document.documentElement;
 
-    // Font sizes
-    root.style.setProperty("--arabic-size", `${settings.arabicSize}px`);
-
-    root.style.setProperty(
-      "--translation-size",
-      `${settings.translationSize}px`,
-    );
+    root.style.setProperty("--arabic-font-size", `${settings.arabicSize}px`);
+    root.style.setProperty("--translation-font-size", `${settings.translationSize}px`);
   }, [settings]);
 
   return (
