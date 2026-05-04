@@ -104,9 +104,7 @@ export default function SettingsPanelContent() {
               <select
                 id={fontSelectId}
                 value={settings.font}
-                onChange={(e) =>
-                  updateSettings({ font: e.target.value })
-                }
+                onChange={(e) => updateSettings({ font: e.target.value })}
                 className="mt-2 w-full rounded-md bg-bg-secondary px-4 py-3.5 text-sm text-text-secondary focus:outline-none"
               >
                 <option value="amiri">Amiri</option>
@@ -118,7 +116,7 @@ export default function SettingsPanelContent() {
             <div>
               <label className="flex justify-between text-xs font-semibold tracking-wide text-muted">
                 <span>Arabic font size</span>
-                <span className="tabular-nums text-primary">
+                <span className="tabular-nums text-[#3f7a36]">
                   {settings.arabicSize}
                 </span>
               </label>
@@ -129,39 +127,32 @@ export default function SettingsPanelContent() {
                 max={100}
                 value={settings.arabicSize}
                 onChange={(e) =>
-                  updateSettings({
-                    arabicSize: Number(e.target.value),
-                  })
+                  updateSettings({ arabicSize: Number(e.target.value) })
                 }
-                className="mt-3 w-full cursor-pointer appearance-none bg-transparent
-                [&::-webkit-slider-runnable-track]:h-1.5
-                [&::-webkit-slider-runnable-track]:w-full
-                [&::-webkit-slider-runnable-track]:rounded-full
-                [&::-webkit-slider-runnable-track]:bg-gray-100/80
+                style={{
+                  background: `linear-gradient(to right, #3f7a36 0%, #3f7a36 ${((settings.arabicSize - 18) / (100 - 18)) * 100}%, #f1f1f1 ${((settings.arabicSize - 18) / (100 - 18)) * 100}%, #f1f1f1 100%)`,
+                }}
+                className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-full
+    [&::-webkit-slider-thumb]:h-4
+    [&::-webkit-slider-thumb]:w-4
+    [&::-webkit-slider-thumb]:appearance-none
+    [&::-webkit-slider-thumb]:rounded-full
+    [&::-webkit-slider-thumb]:bg-[#3f7a36]
+    [&::-webkit-slider-thumb]:transition-transform
+    [&::-webkit-slider-thumb]:duration-100
+    [&::-webkit-slider-thumb]:active:scale-125
 
-                [&::-webkit-slider-thumb]:mt-[-6px]
-                [&::-webkit-slider-thumb]:h-[16px]
-                [&::-webkit-slider-thumb]:w-[16px]
-                [&::-webkit-slider-thumb]:appearance-none
-                [&::-webkit-slider-thumb]:rounded-full
-                [&::-webkit-slider-thumb]:bg-[var(--color-primary)]
-                [&::-webkit-slider-thumb]:transition-transform
-                [&::-webkit-slider-thumb]:duration-100
-                [&::-webkit-slider-thumb]:active:scale-95
-
-                [&::-moz-range-track]:h-1.5
-                [&::-moz-range-track]:rounded-full
-                [&::-moz-range-track]:bg-gray-100/80
-
-                [&::-moz-range-progress]:h-1.5
-                [&::-moz-range-progress]:rounded-full
-                [&::-moz-range-progress]:bg-[var(--color-primary)]
-
-                [&::-moz-range-thumb]:h-[14px]
-                [&::-moz-range-thumb]:w-[14px]
-                [&::-moz-range-thumb]:border-0
-                [&::-moz-range-thumb]:rounded-full
-                [&::-moz-range-thumb]:bg-[var(--color-primary)]"
+    [&::-moz-range-progress]:h-1.5
+    [&::-moz-range-progress]:rounded-full
+    [&::-moz-range-progress]:bg-[#3f7a36]
+    [&::-moz-range-track]:h-1.5
+    [&::-moz-range-track]:rounded-full
+    [&::-moz-range-track]:bg-[#f1f1f1]
+    [&::-moz-range-thumb]:h-4
+    [&::-moz-range-thumb]:w-4
+    [&::-moz-range-thumb]:border-0
+    [&::-moz-range-thumb]:rounded-full
+    [&::-moz-range-thumb]:bg-[#3f7a36]"
               />
             </div>
 
@@ -169,7 +160,7 @@ export default function SettingsPanelContent() {
             <div>
               <label className="flex justify-between text-xs font-semibold tracking-wide text-muted">
                 <span>Translation font size</span>
-                <span className="tabular-nums text-primary">
+                <span className="tabular-nums text-[#3f7a36]">
                   {settings.translationSize}
                 </span>
               </label>
@@ -180,39 +171,29 @@ export default function SettingsPanelContent() {
                 max={44}
                 value={settings.translationSize}
                 onChange={(e) =>
-                  updateSettings({
-                    translationSize: Number(e.target.value),
-                  })
+                  updateSettings({ translationSize: Number(e.target.value) })
                 }
-                className="mt-3 w-full cursor-pointer appearance-none bg-transparent
-                [&::-webkit-slider-runnable-track]:h-1.5
-                [&::-webkit-slider-runnable-track]:w-full
-                [&::-webkit-slider-runnable-track]:rounded-full
-                [&::-webkit-slider-runnable-track]:bg-gray-100/80
-
-                [&::-webkit-slider-thumb]:mt-[-6px]
-                [&::-webkit-slider-thumb]:h-[16px]
-                [&::-webkit-slider-thumb]:w-[16px]
-                [&::-webkit-slider-thumb]:appearance-none
-                [&::-webkit-slider-thumb]:rounded-full
-                [&::-webkit-slider-thumb]:bg-[var(--color-primary)]
-                [&::-webkit-slider-thumb]:transition-transform
-                [&::-webkit-slider-thumb]:duration-100
-                [&::-webkit-slider-thumb]:active:scale-95
-
-                [&::-moz-range-track]:h-1.5
-                [&::-moz-range-track]:rounded-full
-                [&::-moz-range-track]:bg-gray-100/80
-
-                [&::-moz-range-progress]:h-1.5
-                [&::-moz-range-progress]:rounded-full
-                [&::-moz-range-progress]:bg-[var(--color-primary)]
-
-                [&::-moz-range-thumb]:h-[14px]
-                [&::-moz-range-thumb]:w-[14px]
-                [&::-moz-range-thumb]:border-0
-                [&::-moz-range-thumb]:rounded-full
-                [&::-moz-range-thumb]:bg-[var(--color-primary)]"
+                style={{
+                  background: `linear-gradient(to right, #3f7a36 0%, #3f7a36 ${((settings.translationSize - 14) / (44 - 14)) * 100}%, #f1f1f1 ${((settings.translationSize - 14) / (44 - 14)) * 100}%, #f1f1f1 100%)`,
+                }}
+                className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-full
+    [&::-webkit-slider-thumb]:h-4
+    [&::-webkit-slider-thumb]:w-4
+    [&::-webkit-slider-thumb]:appearance-none
+    [&::-webkit-slider-thumb]:rounded-full
+    [&::-webkit-slider-thumb]:bg-[#3f7a36]
+    
+    [&::-moz-range-progress]:h-1.5
+    [&::-moz-range-progress]:rounded-full
+    [&::-moz-range-progress]:bg-[#3f7a36]
+    [&::-moz-range-track]:h-1.5
+    [&::-moz-range-track]:rounded-full
+    [&::-moz-range-track]:bg-[#f1f1f1]
+    [&::-moz-range-thumb]:h-4
+    [&::-moz-range-thumb]:w-4
+    [&::-moz-range-thumb]:border-0
+    [&::-moz-range-thumb]:rounded-full
+    [&::-moz-range-thumb]:bg-[#3f7a36]"
               />
             </div>
           </div>
@@ -227,7 +208,8 @@ export default function SettingsPanelContent() {
 
         <p className="text-sm text-muted">
           Your regular support helps us reach our religious brothers and sisters
-          with the message of Islam. Join our mission and be part of the big change.
+          with the message of Islam. Join our mission and be part of the big
+          change.
         </p>
 
         <div className="mt-4 flex justify-center">

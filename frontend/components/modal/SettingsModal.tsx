@@ -51,7 +51,7 @@ export default function SettingsModal({
           <motion.aside
             role="dialog"
             aria-modal="true"
-            className="absolute right-0 top-0 flex h-full w-full md:max-w-xs flex-col bg-bg-secondary md:rounded-tl-2xl md:rounded-bl-2xl"
+            className="absolute right-0 top-0 flex h-full w-full md:max-w-xs flex-col bg-background md:rounded-tl-2xl md:rounded-bl-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
