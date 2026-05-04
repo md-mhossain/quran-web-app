@@ -12,14 +12,14 @@ export default function AyahList({
 }) {
   if (!results.length) {
     return (
-      <p className="p-5 text-sm text-[var(--color-muted)]">
+      <p className="p-5 text-sm text-muted">
         No results found
       </p>
     );
   }
 
   return (
-    <div className="max-h-80 divide-y divide-[var(--color-border)] overflow-y-auto">
+    <div className="max-h-80 divide-y divide-border-accent overflow-y-auto">
       {results?.map((ayah) => (
         <Ayah key={`${ayah.surahId}-${ayah.ayahNumber}`} ayah={ayah} onClose={onClose} />
       ))}

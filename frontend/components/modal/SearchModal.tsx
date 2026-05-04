@@ -137,7 +137,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
             )}
 
             {!loading && results.length > 0 && (
-              <div className="bg-white mx-3 my-3 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-background mx-3 my-3 rounded-xl shadow-sm border border-accent overflow-hidden">
                 <AyahList results={results} onClose={onClose} />
               </div>
             )}
