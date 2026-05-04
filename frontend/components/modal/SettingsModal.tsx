@@ -34,13 +34,13 @@ export default function SettingsModal({
       }}
     >
       {isOpen && (
-        <div className="fixed inset-0 z-[80] lg:hidden">
+        <div className="fixed inset-0 z-[80] 2xl:hidden">
           {/* Overlay */}
           <motion.button
             type="button"
             aria-label="Close settings overlay"
             onClick={handleClose}
-            className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-black/55 backdrop-blur-[2px] "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -51,7 +51,7 @@ export default function SettingsModal({
           <motion.aside
             role="dialog"
             aria-modal="true"
-            className="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-white"
+            className="absolute right-0 top-0 flex h-full w-full  max-w-xs flex-col bg-bg-secondary md:rounded-tl-2xl md:rounded-bl-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

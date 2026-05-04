@@ -1,6 +1,6 @@
 export default function AyahSkeleton() {
   return (
-    <div className="block animate-pulse rounded-xl border border-gray-200 px-5 py-4">
+    <div className="block animate-pulse rounded-xl border border-accent px-5 py-4">
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-2">
           <div className="h-4 w-36 rounded-md bg-bg-secondary" />

@@ -26,14 +26,14 @@ export default function MasterLayout({
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-full flex-row overflow-hidden bg-white">
+    <div className="flex h-screen w-full flex-row overflow-hidden">
       {/* Left Icon Panel */}
       <IconPanel />
 
       {/* Main Layout */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="w-full shrink-0 border-b border-gray-100">
+        <header className="w-full shrink-0 border-b border-surface">
           <Navbar
             onMenuClick={() => setMobileNavOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
@@ -53,7 +53,7 @@ export default function MasterLayout({
           {/* Content */}
           <main
             id="reader-main"
-            className="flex min-w-0 flex-1 flex-col overflow-y-auto scroll-smooth overscroll-contain bg-white"
+            className="flex min-w-0 flex-1 flex-col overflow-y-auto scroll-smooth overscroll-contain bg-background"
           >
             <div className="flex-1">{children}</div>
             <Footer />

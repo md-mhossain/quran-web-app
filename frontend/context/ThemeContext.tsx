@@ -46,22 +46,17 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ColorScheme>("light");
+  const [theme, setThemeState] = useState<ColorScheme>(() => readStoredTheme());
 
   useLayoutEffect(() => {
-    const next = readStoredTheme();
-    setThemeState(next);
-    applyColorScheme(next);
-  }, []);
+    applyColorScheme(theme);
+  }, [theme]);
 
   const setTheme = useCallback((next: ColorScheme) => {
     setThemeState(next);
     try {
       localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch {
-      /* ignore quota / private mode */
-    }
-    applyColorScheme(next);
+    } catch {}
     flashThemeTransition();
   }, []);
 
@@ -70,10 +65,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const next = prev === "dark" ? "light" : "dark";
       try {
         localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        /* ignore */
-      }
-      applyColorScheme(next);
+      } catch {}
       flashThemeTransition();
       return next;
     });

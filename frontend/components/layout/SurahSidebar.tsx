@@ -71,12 +71,12 @@ export default function SurahSidebar({
         aria-label="Browse surahs"
         className={`
           fixed left-0 top-0 z-50 flex h-full w-full flex-col
-          border-r border-gray-200 bg-white
+          border-r border-accent
 
           transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           will-change-transform
 
-          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${mobileOpen ? "translate-x-0 bg-background" : "-translate-x-full"}
           
           lg:static lg:translate-x-0 lg:w-[min(100%,300px)]
           2xl:w-[min(100%,340px)]
@@ -125,10 +125,10 @@ export default function SurahSidebar({
                     capitalize tracking-wide transition-all duration-200
                     ${
                       active
-                        ? "bg-white text-text-secondary"
+                        ? "bg-background text-text-secondary"
                         : "text-muted hover:text-text-secondary"
                     }
-                    ${disabled ? "opacity-40 cursor-not-allowed" : ""}
+                    ${disabled ? "opacity-40 cursor-not-allowed text-text-secondary" : ""}
                   `}
                 >
                   {label}
@@ -144,7 +144,7 @@ export default function SurahSidebar({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search Surah"
-              className="w-full rounded-full bg-bg-secondary py-2.5 pl-10 pr-3 text-sm text-text-secondary"
+              className="w-full rounded-full bg-bg-secondary py-2.5 pl-10 pr-3 text-sm text-text-secondary focus-visible:ring-0 focus-visible:outline-0"
             />
           </div>
         </div>
@@ -168,17 +168,18 @@ export default function SurahSidebar({
                       className={`
                         flex items-center gap-3 rounded-xl border p-4
                         transition-all duration-200
+                        border-accent group
                         ${
                           active
-                            ? "bg-sidebar-hover"
-                            : "border-gray-200 hover:bg-sidebar-hover"
+                            ? "bg-sidebar-hover "
+                            : "hover:bg-sidebar-hover"
                         }
                       `}
                     >
                       <div
                         className={`
                           flex h-10 w-10 rotate-45 items-center justify-center
-                          rounded-md bg-bg-secondary text-text-secondary
+                          rounded-md bg-bg-secondary text-text-secondary group-hover:bg-primary group-hover:text-white transition duration-300
                           ${active ? "bg-primary text-white" : ""}
                         `}
                       >

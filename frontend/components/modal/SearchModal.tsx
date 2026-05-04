@@ -86,7 +86,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
       >
         {/* BACKDROP (FIXED + CLICK SAFE) */}
         <motion.div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md"
+          className="fixed inset-0 bg-black/60"
           onClick={onClose}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -95,19 +95,19 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
 
         {/* MODAL */}
         <motion.div
-          className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-white z-50"
+          className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-accent bg-background z-50"
           initial={{ scale: 0.95, opacity: 0, y: -10 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: -10 }}
           transition={{ duration: 0.18 }}
         >
           {/* HEADER */}
-          <div className="bg-gradient-to-r from-white to-gray-50 px-6 pt-6 pb-4 border-b border-gray-200">
+          <div className="bg-background px-6 pt-6 pb-4 border-b border-accent">
             <p className="text-xs text-gray-500 mb-3">
               Search Quran • Surah & Ayah
             </p>
 
-            <div className="flex items-center gap-2 border border-gray-200 bg-bg-secondary rounded-xl px-4 py-3 focus-within:ring-0 transition">
+            <div className="flex items-center gap-2 border border-accent bg-bg-secondary rounded-xl px-4 py-3 focus-within:ring-0 transition">
               🔍
               <input
                 autoFocus
@@ -120,7 +120,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* RESULTS */}
-          <div className="bg-gray-50 max-h-[420px] overflow-y-auto">
+          <div className="bg-background max-h-[420px] overflow-y-auto">
             {loading && (
               <div className="space-y-2 p-2">
                 <AyahSkeleton />

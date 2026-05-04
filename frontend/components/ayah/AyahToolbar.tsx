@@ -6,34 +6,53 @@ import {
   Copy,
   MoreHorizontal,
   Play,
-  X,
+  Pause,
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
-
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 
 export default function AyahToolbar({
   arabic,
   translation,
   showTranslation,
+  audioUrl,
+  onPlayClick, // Added to receive the function from SurahDetails
 }: {
   arabic: string;
   translation: string;
   showTranslation: boolean;
+  audioUrl?: string;
+  onPlayClick?: () => void; // Defined the type for the function
 }) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const copyAyah = useCallback(async () => {
-    const text = showTranslation ? `${arabic}\n\n${translation}` : arabic;
+  const togglePlay = useCallback(() => {
+    // If a global player function is provided, use that instead of local audio
+    if (onPlayClick) {
+      onPlayClick();
+      return;
+    }
 
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {}
-  }, [arabic, translation, showTranslation]);
+    if (!audioUrl) return;
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch((err) => console.error("Playback error:", err));
+      setIsPlaying(true);
+    }
+  }, [audioUrl, isPlaying, onPlayClick]);
 
   // ESC close
   useEffect(() => {
@@ -45,17 +64,39 @@ export default function AyahToolbar({
     return () => window.removeEventListener("keydown", handler);
   }, [open]);
 
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
+  const copyAyah = useCallback(async () => {
+    const text = showTranslation ? `${arabic}\n\n${translation}` : arabic;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  }, [arabic, translation, showTranslation]);
 
   return (
     <>
       {/* DESKTOP TOOLBAR */}
       <div className="hidden md:flex w-[52px] max-w-[52px] flex-col items-start gap-2">
         <button
-          disabled
-          className="cursor-not-allowed rounded-xl text-muted opacity-50 p-2"
+          onClick={togglePlay}
+          className="rounded-xl text-muted hover:bg-bg-secondary p-2 transition-colors"
         >
-          <Play className="h-[18px] w-[18px]" />
+          {isPlaying ? (
+            <Pause className="h-[18px] w-[18px] text-emerald-600" />
+          ) : (
+            <Play className="h-[18px] w-[18px]" />
+          )}
         </button>
 
         <button className="rounded-full p-2 text-muted hover:bg-bg-secondary">
@@ -74,7 +115,7 @@ export default function AyahToolbar({
         </button>
 
         <button
-          onClick={copyAyah}
+          onClick={() => setOpen(true)}
           className="rounded-full p-2 text-muted hover:bg-bg-secondary"
         >
           <MoreHorizontal className="h-[18px] w-[18px]" />
@@ -91,11 +132,10 @@ export default function AyahToolbar({
         </button>
       </div>
 
-      {/* MOBILE BOTTOM SHEET (FRAMER MOTION) */}
+      {/* MOBILE BOTTOM SHEET */}
       <AnimatePresence>
         {open && (
           <div className="fixed inset-0 z-50">
-            {/* BACKDROP */}
             <motion.div
               className="absolute inset-0 bg-black/50"
               initial={{ opacity: 0 }}
@@ -104,28 +144,36 @@ export default function AyahToolbar({
               onClick={() => setOpen(false)}
             />
 
-            {/* SHEET WRAPPER */}
             <div className="absolute bottom-0 left-0 right-0 flex justify-center">
               <motion.div
-                className="w-full max-w-md rounded-t-2xl bg-white p-6 shadow-2xl"
+                className="w-full max-w-md rounded-t-2xl bg-bg-secondary p-6"
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
-                transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 28,
-                }}
+                transition={{ type: "spring", stiffness: 260, damping: 28 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* HANDLE */}
                 <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-gray-300" />
 
-                {/* ACTIONS */}
                 <div className="flex flex-col space-y-8">
-                  <button disabled className="opacity-50 flex gap-2">
-                    <Play className="h-5 w-5" />
-                    Play (coming soon)
+                  <button 
+                    onClick={() => {
+                        togglePlay();
+                        setOpen(false); // Close sheet on play
+                    }} 
+                    className="flex gap-2 items-center"
+                  >
+                    {isPlaying ? (
+                      <>
+                        <Pause className="h-5 w-5 text-emerald-600" />
+                        <span className="text-emerald-600">Pause Ayah</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="h-5 w-5" />
+                        Play Ayah
+                      </>
+                    )}
                   </button>
 
                   <button className="flex gap-2">

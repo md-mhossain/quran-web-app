@@ -33,7 +33,7 @@ export default function SettingsPanelContent() {
   return (
     <>
       {/* Mode Switch */}
-      <div className="mb-6 inline-flex w-full rounded-full bg-bg-secondary p-1">
+      <div className="mb-6 inline-flex w-full rounded-full bg-bg-secondary p-1 border border-accent">
         {modes.map((item) => {
           const active = settings.readingMode === item.key;
 
@@ -44,7 +44,7 @@ export default function SettingsPanelContent() {
               onClick={() => updateSettings({ readingMode: item.key })}
               className={`
                 flex-1 rounded-full px-3 py-2 text-sm font-semibold tracking-wide transition-all duration-200 sm:px-4
-                ${active ? "bg-white text-text-secondary" : "text-text-secondary"}
+                ${active ? "bg-background text-text-secondary" : "text-text-secondary"}
               `}
             >
               {item.label}
@@ -70,7 +70,7 @@ export default function SettingsPanelContent() {
         </button>
 
         {readingOpen && (
-          <div className="rounded-xl border border-gray-200 bg-bg-secondary px-4 py-4 text-sm leading-relaxed text-text-secondary">
+          <div className="rounded-xl border border-accent bg-bg-secondary px-4 py-4 text-sm leading-relaxed text-text-secondary">
             Translation mode shows ayah translations; Reading mode hides them
             for focused Arabic recitation.
           </div>
@@ -220,7 +220,7 @@ export default function SettingsPanelContent() {
       </div>
 
       {/* Support Section */}
-      <div className="mt-8 block rounded-xl border border-gray-200 bg-primary/10 p-4">
+      <div className="mt-8 block rounded-xl border border-accent bg-primary/10 p-4">
         <h1 className="text-start text-lg font-semibold text-text-secondary">
           Help spread the knowledge of Islam
         </h1>

@@ -20,7 +20,7 @@ export default function Navbar({
 
   return (
     <>
-      <div className="sticky top-0 z-40 w-full">
+      <div className="sticky top-0 z-40 w-full border-b border-accent">
         <div className="mx-auto flex w-full max-w-[100vw] items-center justify-between gap-3 px-4 py-3 sm:gap-4 md:px-5 lg:px-6">
           {/* Left Section */}
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -53,7 +53,7 @@ export default function Navbar({
               type="button"
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search"
-              className="rounded-full bg-bg-secondary p-2 text-primary transition-colors duration-200 outline-0"
+              className="cursor-pointer rounded-full bg-bg-secondary p-2 text-primary transition-colors duration-200 outline-0"
             >
               <Search
                 className="h-5 w-5 sm:h-[19px] sm:w-[19px]"
@@ -67,7 +67,7 @@ export default function Navbar({
               type="button"
               onClick={onOpenSettings}
               aria-label="Open settings"
-              className="rounded-full bg-bg-secondary p-2 text-primary lg:hidden"
+              className="cursor-pointer rounded-full bg-bg-secondary p-2 text-primary 2xl:hidden"
             >
               <Settings
                 className="h-5 w-5 sm:h-[19px] sm:w-[19px]"
@@ -77,7 +77,7 @@ export default function Navbar({
 
             <Link
               href="#support"
-              className="ml-1 hidden items-center gap-2 rounded-full bg-primary px-3.5 py-2 text-xs font-normal text-white sm:px-4 sm:text-sm lg:inline-flex"
+              className="cursor-pointer hidden items-center gap-2 rounded-full bg-primary px-3.5 py-2 text-xs font-normal text-white sm:px-4 sm:text-sm lg:inline-flex"
             >
               <Heart
                 className="h-4 w-4 shrink-0 fill-current opacity-90"
