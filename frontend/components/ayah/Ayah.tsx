@@ -16,15 +16,15 @@ export default function Ayah({
       href={`/surah/${ayah.surahId}#ayah-${ayah.ayahNumber}`}
       className="group block px-5 py-4"
     >
-      <div className="flex items-start justify-between gap-3 bg-bg-secondary">
+      <div className="flex items-start justify-between gap-3 bg-background">
         <div className="min-w-0">
-          <h3 className="truncate font-semibold text-muted">
+          <h3 className="truncate text-muted">
             {ayah.surahTransliteration}
           </h3>
 
           <p
             dir="rtl"
-            className="mt-1 truncate font-[family-name:var(--arabic-font-family)] text-[15px] leading-relaxed text-text-secondary"
+            className="mt-2 truncate font-[family-name:var(--arabic-font-family)] text-[15px] leading-relaxed text-text-secondary"
           >
             {ayah.surahName}
           </p>
