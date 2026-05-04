@@ -1,13 +1,17 @@
+export type ReadingMode = "translation" | "reading";
+
 export interface Settings {
   font: string;
   arabicSize: number;
   translationSize: number;
-};
+  readingMode: ReadingMode;
+}
 
 export const defaultSettings: Settings = {
   font: "amiri",
   arabicSize: 28,
   translationSize: 16,
+  readingMode: "translation",
 };
 
 
@@ -24,6 +28,7 @@ export interface Surah {
   transliteration: string;
   translation: string;
   verses: Ayah[];
+  type:string
 };
 
 

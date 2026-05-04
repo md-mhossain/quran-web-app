@@ -1,65 +1,100 @@
 "use client";
 
 import { Surah } from "@/types";
-import { Bookmark, Share2, Copy, MoreHorizontal } from "lucide-react";
+import { useSettings } from "@/context/SettingsContext";
+import Image from "next/image";
+import AyahToolbar from "../ayah/AyahToolbar";
 
 export default function SurahDetails({ surah }: { surah: Surah }) {
+  const { settings } = useSettings();
+
+  const showTranslation = settings.readingMode === "translation";
+
+  const verseCount = surah?.total_verses ?? surah?.verses?.length ?? 0;
 
   return (
-    <div
-      className="w-full bg-gray-50 min-h-screen"
-    >
-      {/* Header */}
-      <div className="max-w-5xl mx-auto px-4 py-10 text-center">
+    <div className="min-h-full">
+      <header>
+        <div className="px-4 sm:px-5 md:px-6 2xl:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-5 md:py-6">
+            {/* LEFT IMAGE */}
+            <div className="hidden md:flex justify-start">
+              <Image
+                src="/makkah.webp"
+                alt=""
+                width={120}
+                height={120}
+                priority={surah?.id === 1}
+                className="object-contain w-auto h-auto"
+              />
+            </div>
 
-        <div className="flex justify-center gap-3 mb-6">
-          <button className="px-4 py-2 rounded-full bg-white shadow-sm text-sm">
-            Translation
-          </button>
-        </div>
+            {/* CENTER CONTENT */}
+            <div className="w-full md:flex-1 text-center">
+              <h2 className="font-[family-name:var(--font-inter)] text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-text-secondary">
+                Surah {surah?.transliteration}
+              </h2>
 
-        <h1 className="arabic-text mb-4">
-          {surah?.name}
-        </h1>
-
-        <h2 className="font-semibold text-gray-800">
-          {surah?.id}. {surah?.transliteration}
-        </h2>
-
-        <p className="text-gray-500 mt-1">
-          The Opener
-        </p>
-      </div>
-
-      {/* Ayahs */}
-      <div className="max-w-5xl mx-auto px-4 pb-16">
-        {surah?.verses.map((ayah) => (
-          <div
-            id={`ayah-${ayah.id}`}
-            key={ayah.id}
-            className="py-8 border-b border-gray-300"
-          >
-            <div className="flex items-center justify-between text-gray-500 text-sm mb-4">
-              <span>{surah?.id}:{ayah.id}</span>
-
-              <div className="flex items-center gap-4">
-                <Bookmark className="w-4 h-4 cursor-pointer hover:text-primary" />
-                <Share2 className="w-4 h-4 cursor-pointer hover:text-primary" />
-                <Copy className="w-4 h-4 cursor-pointer hover:text-primary" />
-                <MoreHorizontal className="w-4 h-4 cursor-pointer hover:text-primary" />
+              <div className="mt-2 flex items-center justify-center flex-wrap gap-x-2 text-muted">
+                <span className="text-xs sm:text-sm tracking-[0.18em]">
+                  Ayah-
+                </span>
+                <span className="text-xs sm:text-sm tabular-nums capitalize">
+                  {verseCount}, {surah?.type}
+                </span>
               </div>
             </div>
 
-            {/* Arabic */}
-            <p className="arabic-text mb-6">
-              {ayah?.text}
-            </p>
-
-            {/* Translation */}
-            <p className="translation-text text-gray-800">
-              {ayah?.translation}
-            </p>
+            {/* RIGHT NAME */}
+            <div className="flex justify-end">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-gray-400 text-right">
+                بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+              </h2>
+            </div>
           </div>
+        </div>
+      </header>
+
+      {/* AYAH LIST */}
+      <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 mt-3">
+        {surah?.verses.map((ayah) => (
+          <article
+            id={`ayah-${ayah.id}`}
+            key={ayah.id}
+            className="border-b border-gray-200"
+          >
+            <div className="flex flex-col md:flex-row items-start gap-5 md:gap-6 py-4 px-4 sm:px-5 md:px-6 2xl:px-8">
+              {/* TOOLBAR */}
+              <AyahToolbar
+                arabic={ayah.text}
+                translation={ayah.translation}
+                showTranslation={showTranslation}
+              />
+
+              {/* CONTENT */}
+              <div className="min-w-0 flex-1 flex flex-col gap-5 justify-between h-full">
+                {/* ARABIC */}
+                <div dir="rtl" className="text-right">
+                  <p className="arabic-text text-text-secondary leading-loose">
+                    {ayah?.text}
+                  </p>
+                </div>
+
+                {/* TRANSLATION */}
+                {showTranslation && (
+                  <div className="pt-4 flex flex-col">
+                    <p className="pb-2 text-xs font-normal uppercase tracking-[0.2em] text-muted">
+                      Saheeh International
+                    </p>
+
+                    <p className="translation-text text-text-secondary">
+                      {ayah?.translation}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </article>
         ))}
       </div>
     </div>

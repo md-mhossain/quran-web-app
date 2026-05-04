@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as surahService from "./surah.service";
+import { Surah } from "../../types";
 
 // Implementation for getting all surahs
 export const getAllSurah = async (
@@ -9,12 +10,13 @@ export const getAllSurah = async (
   try {
     const data = await surahService.getAllSurah();
 
-    const formatted = data.map((s: any) => ({
+    const formatted = data.map((s: Surah) => ({
       id: s.id,
       name: s.name,
       translation: s.translation,
       transliteration: s.transliteration,
       total_verses: s.verses?.length,
+      type: s.type
     }));
 
     res.status(200).json({

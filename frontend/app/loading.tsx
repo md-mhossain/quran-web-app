@@ -1,12 +1,10 @@
 import MasterLayout from "@/components/layout/MasterLayout";
-import SuraListSkeleton from "@/skeleton/SuraListSkeleton";
+import SuraDetailSkeleton from "@/skeleton/SuraDetailSkeleton";
 
-const loading = () => {
-    return (
-        <MasterLayout>
-            <SuraListSkeleton />
-        </MasterLayout>
-    );
-};
-
-export default loading;
+export default function Loading() {
+  return (
+    <MasterLayout surahs={[]}>
+      <SuraDetailSkeleton />
+    </MasterLayout>
+  );
+}

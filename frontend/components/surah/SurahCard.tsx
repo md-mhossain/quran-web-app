@@ -3,46 +3,37 @@ import { Surah } from "@/types";
 
 export default function SurahCard({ surah }: { surah: Surah }) {
   return (
-    <Link href={`/surah/${surah.id}`}>
-      <div className="group relative flex items-center justify-between p-5 rounded-md border border-gray-200 hover:border-primary bg-white/80 hover:bg-gray-50 backdrop-blur-sm hover:shadow hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
+    <Link href={`/surah/${surah.id}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] rounded-[var(--reader-radius)]">
+      <div className="relative flex items-center justify-between gap-4 overflow-hidden rounded-[var(--reader-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-5 shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition-all duration-300 hover:border-[color-mix(in_oklab,var(--color-primary)_38%,var(--color-border))] hover:bg-[var(--color-surface-alt)] hover:shadow-[0_18px_42px_rgba(0,0,0,0.26)] md:px-5 md:py-6">
+        <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-[linear-gradient(105deg,transparent_40%,color-mix(in_oklab,var(--color-primary)_14%,transparent)_65%,transparent)]" />
 
-        {/* Glow Effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-
-        {/* Left Side */}
-        <div className="flex items-center gap-4 relative z-10">
-
-          {/* Number Badge */}
-          <div className="w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 font-bold text-gray-700 group-hover:from-primary group-hover:to-primary/80 transition-all duration-300 shadow-sm">
-            {surah?.id}
+        <div className="relative z-[1] flex min-w-0 flex-1 items-center gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-alt)] rotate-45 shadow-inner transition-colors duration-300 group-hover:border-[color-mix(in_oklab,var(--color-primary)_35%,var(--color-border))]">
+            <span className="-rotate-45 text-sm font-bold tabular-nums text-[var(--foreground)]">
+              {surah?.id}
+            </span>
           </div>
 
-          {/* Text */}
-          <div>
-            <h2 className="surah-title text-gray-800">
+          <div className="min-w-0">
+            <h2 className="truncate font-semibold text-[var(--foreground)]">
               {surah?.transliteration}
             </h2>
-
-            <p className="translation-text text-gray-500 group-hover:text-primary transition">
+            <p className="truncate text-sm text-[var(--color-text-secondary)] transition-colors duration-300 group-hover:text-[var(--foreground)]">
               {surah?.translation}
             </p>
           </div>
         </div>
 
-        {/* Arabic Name */}
-        <div className="text-right relative z-10">
-          <h3 className="arabic-text text-gray-800 font-bold">
+        <div className="relative z-[1] max-w-[42%] shrink-0 text-right">
+          <h3
+            dir="rtl"
+            className="truncate font-[family-name:var(--arabic-font-family)] text-lg leading-snug text-[var(--foreground)] md:text-xl"
+          >
             {surah.name}
           </h3>
-
-          <p className="translation-text text-gray-500 group-hover:text-primary transition">
-            {surah?.total_verses ?? 0} Ayahs
+          <p className="mt-1 text-xs text-[var(--color-muted)]">
+            {(surah?.total_verses ?? 0).toLocaleString()} ayahs
           </p>
-        </div>
-
-        {/* Right Arrow */}
-        <div className="absolute right-4 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300 text-primary">
-          →
         </div>
       </div>
     </Link>

@@ -3,11 +3,8 @@ import SurahDetails from "@/components/surah/SurahDetails";
 import { Surah } from "@/types";
 import MasterLayout from "@/components/layout/MasterLayout";
 
-
-// Force SSG
 export const dynamic = "force-static";
 
-// Generate all static routes at build time
 export async function generateStaticParams() {
   const res = await fetchSurahList();
 
@@ -18,10 +15,8 @@ export async function generateStaticParams() {
   }));
 }
 
-
-
 type Props = {
-    params: Promise<{ id: number }>;
+  params: Promise<{ id: string }>;
 };
 
 export default async function Page({
@@ -29,25 +24,34 @@ export default async function Page({
 }: {
   params: Props["params"];
 }) {
-  
-    
-    const { id } = await params;
+  const { id } = await params;
+  const numericId = Number(id);
+  console.log(numericId)
 
+  const [listRes, result] = await Promise.all([
+    fetchSurahList(),
+    fetchSurahById(numericId),
+  ]);
 
-  const result = await fetchSurahById(id);
+  const surahs = listRes.data ?? [];
 
   if (!result.status || !result.data) {
     return (
-      <div className="text-center py-20 text-red-500 flex items-center justify-center">
-        Failed to load Surah
-      </div>
+      <MasterLayout surahs={surahs} currentSurahId={numericId}>
+        <div className="flex min-h-[40vh] flex-col items-center justify-center px-4 py-20 text-center">
+          <p className="text-sm font-medium text-red-400/90">Failed to load Surah</p>
+          <p className="mt-2 max-w-md text-sm text-muted">
+            The surah may be missing or the service is unreachable.
+          </p>
+        </div>
+      </MasterLayout>
     );
   }
 
   const data: Surah = result.data;
 
   return (
-    <MasterLayout>
+    <MasterLayout surahs={surahs} currentSurahId={data.id}>
       <SurahDetails surah={data} />
     </MasterLayout>
   );

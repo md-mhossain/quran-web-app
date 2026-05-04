@@ -10,6 +10,7 @@ export interface Surah {
   transliteration: string;
   translation: string;
   verses: Ayah[];
+  type: string
 };
 
 

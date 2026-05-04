@@ -1,22 +1,12 @@
 "use client";
 
-import { useSettings } from "@/context/SettingsContext";
-
 export default function BodyWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { settings } = useSettings();
-
-
   return (
-    <div
-      className={`
-        min-h-full flex flex-col
-        ${settings.font === "amiri" ? "font-amiri" : "font-inter"}
-      `}
-    >
+    <div className="min-h-screen flex flex-col bg-background text-text-secondary antialiased font-inter">
       {children}
     </div>
   );

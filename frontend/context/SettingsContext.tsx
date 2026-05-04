@@ -1,42 +1,117 @@
 "use client";
 
 import { Settings, defaultSettings } from "@/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 
 type SettingsContextType = {
   settings: Settings;
   setSettings: (val: Settings) => void;
 };
 
-const SettingsContext = createContext<SettingsContextType | null>(null);
+const STORAGE_KEY = "quran-settings";
 
-export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  
-  // Lazy init (runs only on client, safe)
-  const [settings, setSettings] = useState<Settings>(() => {
-    try {
-      const stored = localStorage.getItem("quran-settings");
-      return stored ? JSON.parse(stored) : defaultSettings;
-    } catch {
-      return defaultSettings;
+const SettingsContext = createContext<SettingsContextType | null>(
+  null
+);
+
+/* ---------- Snapshot Cache ---------- */
+let cachedSettings: Settings = defaultSettings;
+
+function readSettings(): Settings {
+  if (typeof window === "undefined") {
+    return defaultSettings;
+  }
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+
+    if (!stored) {
+      cachedSettings = defaultSettings;
+      return cachedSettings;
     }
-  });
 
-  // Persist
-  useEffect(() => {
-    localStorage.setItem("quran-settings", JSON.stringify(settings));
-  }, [settings]);
+    const parsed = JSON.parse(stored) as Partial<Settings>;
 
-  // Apply CSS variables
+    const nextSettings = {
+      ...defaultSettings,
+      ...parsed,
+    };
+
+    // Return cached object if unchanged
+    if (
+      JSON.stringify(nextSettings) ===
+      JSON.stringify(cachedSettings)
+    ) {
+      return cachedSettings;
+    }
+
+    cachedSettings = nextSettings;
+    return cachedSettings;
+  } catch {
+    return cachedSettings;
+  }
+}
+
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+
+  return () => {
+    window.removeEventListener("storage", callback);
+  };
+}
+
+export function SettingsProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const settings = useSyncExternalStore(
+    subscribe,
+    readSettings,
+    () => defaultSettings
+  );
+
+  const setSettings = (val: Settings) => {
+    cachedSettings = val;
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(val)
+    );
+
+    window.dispatchEvent(new Event("storage"));
+  };
+
   useEffect(() => {
     const root = document.documentElement;
 
-    root.style.setProperty("--arabic-font-size", `${settings.arabicSize}px`);
-    root.style.setProperty("--translation-font-size", `${settings.translationSize}px`);
+    root.style.setProperty(
+      "--arabic-font-size",
+      `${settings.arabicSize}px`
+    );
+
+    root.style.setProperty(
+      "--translation-font-size",
+      `${settings.translationSize}px`
+    );
+
+    root.style.setProperty(
+      "--arabic-font-family",
+      settings.font === "amiri"
+        ? 'var(--font-amiri), "Amiri", serif'
+        : 'var(--font-scheherazade), "Scheherazade New", serif'
+    );
   }, [settings]);
 
   return (
-    <SettingsContext.Provider value={{ settings, setSettings }}>
+    <SettingsContext.Provider
+      value={{ settings, setSettings }}
+    >
       {children}
     </SettingsContext.Provider>
   );
@@ -44,6 +119,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
 export const useSettings = () => {
   const ctx = useContext(SettingsContext);
-  if (!ctx) throw new Error("useSettings must be used inside Provider");
+
+  if (!ctx) {
+    throw new Error(
+      "useSettings must be used inside Provider"
+    );
+  }
+
   return ctx;
 };
