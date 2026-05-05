@@ -20,45 +20,42 @@ export default function Navbar({
 
   return (
     <>
-      <div className="sticky top-0 z-40 w-full border-b border-accent">
-        <div className="mx-auto flex w-full max-w-[100vw] items-center justify-between gap-3 px-4 py-3 sm:gap-4 md:px-5 lg:px-6">
-          {/* Left Section */}
-          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+      <div className="sticky top-0 z-40 w-full border-b border-accent bg-bg-primary">
+        <div className="mx-auto flex w-full items-center justify-between px-3 py-3 sm:px-4 md:px-5 lg:px-6">
+          {/* Left */}
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onMenuClick}
               aria-label="Open surah navigation"
-              className="rounded-full bg-bg-secondary p-2 text-primary transition-colors duration-200 focus-visible:outline-none lg:hidden"
+              className="rounded-full bg-bg-secondary p-2 text-primary lg:hidden"
             >
-              <Menu
-                className="h-5 w-5 sm:h-[19px] sm:w-[19px]"
-                strokeWidth={1.75}
-              />
+              <Menu className="h-5 w-5" strokeWidth={1.75} />
             </button>
 
-            <Link href={"/"} className="flex flex-col items-start justify-center leading-tight">
-              <h2 className="text-[15px] font-bold text-text-secondary sm:text-lg">
+            <Link
+              href="/"
+              className="min-w-0 flex flex-col justify-center leading-tight mx-auto md:mx-0"
+            >
+              <h2 className="truncate text-sm font-bold text-text-secondary sm:text-lg">
                 Quran Mazid
               </h2>
 
-              <p className="hidden text-[10px] text-text-secondary md:block">
+              <p className="hidden text-[10px] text-text-secondary md:block lg:text-xs">
                 Read, Study, and Learn The Quran
               </p>
             </Link>
           </div>
 
-          {/* Right Section */}
-          <div className="flex shrink-0 items-center gap-3.5 sm:gap-5">
+          {/* Right */}
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3 md:gap-4">
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search"
-              className="cursor-pointer rounded-full bg-bg-secondary p-2 text-primary transition-colors duration-200 outline-0"
+              className="rounded-full bg-bg-secondary p-2 text-primary"
             >
-              <Search
-                className="h-5 w-5 sm:h-[19px] sm:w-[19px]"
-                strokeWidth={1.75}
-              />
+              <Search className="h-5 w-5" strokeWidth={1.75} />
             </button>
 
             <ThemeToggle />
@@ -67,17 +64,14 @@ export default function Navbar({
               type="button"
               onClick={onOpenSettings}
               aria-label="Open settings"
-              className="cursor-pointer rounded-full bg-bg-secondary p-2 text-primary 2xl:hidden"
+              className="rounded-full bg-bg-secondary p-2 text-primary 2xl:hidden"
             >
-              <Settings
-                className="h-5 w-5 sm:h-[19px] sm:w-[19px]"
-                strokeWidth={1.75}
-              />
+              <Settings className="h-5 w-5" strokeWidth={1.75} />
             </button>
 
             <Link
               href="#support"
-              className="cursor-pointer hidden items-center gap-2 rounded-full bg-primary px-3.5 py-2 text-xs font-normal text-white sm:px-4 sm:text-sm lg:inline-flex"
+              className="hidden items-center gap-2 rounded-full bg-primary px-3 py-2 text-sm font-normal text-white sm:inline-flex"
             >
               <Heart
                 className="h-4 w-4 shrink-0 fill-current opacity-90"
