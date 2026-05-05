@@ -2,18 +2,23 @@ import { fetchSurahById, fetchSurahList } from "@/lib/api";
 import SurahDetails from "@/components/surah/SurahDetails";
 import MasterLayout from "@/components/layout/MasterLayout";
 
-export const revalidate = 86400; // 1 day
+export const revalidate = 86400;
 export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const listRes = await fetchSurahList();
+  const surahs = listRes.data ?? [];
+
+  return surahs.map((surah: { id: number }) => ({
+    id: surah.id.toString(),
+  }));
+}
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Props["params"];
-}) {
+export default async function Page({ params }: Props) {
   const { id } = await params;
   const numericId = Number(id);
 

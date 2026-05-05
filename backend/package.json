@@ -4,11 +4,10 @@
   "description": "A modern Quran Web Application built with Next.js and Node.js, featuring Surah browsing, Ayah reading with Arabic and translation, search functionality, and customizable reading settings.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
-  },
+  "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/md-mhossain/quran-web-app.git"
@@ -16,7 +15,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+ 
   "bugs": {
     "url": "https://github.com/md-mhossain/quran-web-app/issues"
   },
