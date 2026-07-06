@@ -10,7 +10,7 @@ A modern and responsive Quran web application that allows users to read Surahs, 
 ---
 
 ## 🚀 Live Demo
-👉 https://quran-web-app-als7.vercel.app
+👉 https://quran-web-app-sigma.vercel.app
 
 ---
 
